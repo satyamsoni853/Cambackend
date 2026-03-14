@@ -1,0 +1,7 @@
+venv/
+__pycache__/
+*.pyc
+debug_log*.txt
+test_output*.txt
+uploads/
+.env
