@@ -442,15 +442,17 @@ async def websocket_endpoint(
             while True:
                 try:
                     data = await websocket.receive_json()
-                except Exception:
-                    # Broken connection or invalid JSON
+                except Exception as e:
+                    print(f"WS Receive Error: {e}")
                     break
                     
                 msg_type = data.get("type", "message")
+                print(f"WS Message Received: {msg_type} from {user_id}")
 
                 # ── Chat message ──
                 if msg_type == "message":
                     receiver_id = data.get("to")
+                    print(f"Sending message to: {receiver_id}")
                     content = data.get("content", "").strip()
                     file_url = data.get("file_url")
                     file_name = data.get("file_name")
