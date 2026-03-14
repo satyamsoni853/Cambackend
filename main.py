@@ -473,9 +473,14 @@ async def websocket_endpoint(
                         reply_to_id=reply_to_id,
                         status=MessageStatus.DELIVERED if manager.is_online(receiver_id) else MessageStatus.SENT,
                     )
-                    db.add(msg)
-                    await db.commit()
-                    await db.refresh(msg)
+                    try:
+                        db.add(msg)
+                        await db.commit()
+                        await db.refresh(msg)
+                    except Exception as db_err:
+                        print(f"WS Message DB Error: {db_err}")
+                        await db.rollback()
+                        continue
 
                     reply_preview = None
                     if reply_to_id:
