@@ -440,7 +440,12 @@ async def websocket_endpoint(
 
         try:
             while True:
-                data = await websocket.receive_json()
+                try:
+                    data = await websocket.receive_json()
+                except Exception:
+                    # Broken connection or invalid JSON
+                    break
+                    
                 msg_type = data.get("type", "message")
 
                 # ── Chat message ──
